@@ -1,30 +1,12 @@
 <div align="center">
 
-# evative7-pykg-template
+# minitouch.py
 
-A project template for writing modern and distributable Python packages based on this, while ensuring unity of style and focus on code.
+python wrapper of minitouch, forked from [williamfzc/pyminitouch](https://github.com/williamfzc/pyminitouch) which licensed under [MIT](./LICENSE)
 
-[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/EvATive7/minitouch.py/package.yml)](https://github.com/EvATive7/minitouch.py/actions)
+[![Python](https://img.shields.io/pypi/pyversions/minitouch.py)](https://badge.fury.io/py/minitouch.py)
+[![PyPI version](https://badge.fury.io/py/minitouch.py.svg)](https://badge.fury.io/py/minitouch.py)
+[![License](https://img.shields.io/github/license/EvATive7/minitouch.py.svg)](https://pypi.org/project/minitouch.py/)
 
-<!-- TODO: Finish this if you need badges
-[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/YOURNAME/YOURREPO/WORKFLOWFILE)](https://github.com/YOURNAME/YOURREPO/actions)
-[![Python](https://img.shields.io/pypi/pyversions/YOURPROJECT)](https://badge.fury.io/py/YOURPROJECT)
-[![PyPI version](https://badge.fury.io/py/YOURPROJECT.svg)](https://badge.fury.io/py/YOURPROJECT)
-[![Coverage Status](https://coveralls.io/repos/YOURNAME/YOURREPO/badge.svg?branch=develop&service=github)](https://coveralls.io/github/YOURNAME/YOURREPO?branch=master)
-[![License](https://img.shields.io/github/license/YOURNAME/YOURREPO.svg)](https://pypi.org/project/YOURPROJECT/)
-
--->
 </div>
-
-## Quickstart
-
-1. `python -m venv .venv`
-1. `source .venv/bin/activate`(bash) or `& .venv\Scripts\activate`(powershell)
-1. `pip install .[dev]`
-1. `pre-commit install`
-1. Finish docs, TODOs and codes
-   > If you need to publish to pypi...
-1. Change the `if` field of `pypi-publish` Job in [package.yml](./.github/workflows/package.yml) to true
-1. Create the project in pypi
-1. Adding a Trusted Publisher to this project (see https://docs.pypi.org/trusted-publishers/adding-a-publisher/)
