@@ -93,7 +93,7 @@ class MNTServer(object):
         self._start_mnt()
 
         # make sure it's up
-        # time.sleep(1)
+        time.sleep(1)
         assert (
             self.heartbeat()
         ), "minitouch did not work. see https://github.com/williamfzc/pyminitouch/issues/11"
@@ -135,9 +135,7 @@ class MNTServer(object):
             "/data/local/tmp/minitouch",
         ]
         logger.info("start minitouch: {}".format(" ".join(command_list)))
-        self.mnt_process = subprocess.Popen(
-            command_list, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True
-        )
+        self.mnt_process = subprocess.Popen(command_list, stdout=subprocess.DEVNULL)
 
     def heartbeat(self):
         """check if minitouch process alive"""
@@ -156,17 +154,13 @@ class MNTConnection(object):
     _DEFAULT_HOST = config.DEFAULT_HOST
     _DEFAULT_BUFFER_SIZE = config.DEFAULT_BUFFER_SIZE
 
-    def __init__(self, server: MNTServer):
-        self.server = server
-        self.port = server.port
+    def __init__(self, port):
+        self.port = port
 
         # build connection
-        while not self.server.isconnected():
-            client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            client.connect((self._DEFAULT_HOST, self.port))
-            self.client = client
-
-        logger.info("connection to minitouch server established")
+        client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        client.connect((self._DEFAULT_HOST, self.port))
+        self.client = client
 
         # get minitouch server info
         socket_out = client.makefile()
@@ -216,7 +210,7 @@ def safe_connection(device_id):
     # prepare for connection
     server = MNTServer(device_id)
     # real connection
-    connection = MNTConnection(server)
+    connection = MNTConnection(server.port)
     try:
         yield connection
     finally:
