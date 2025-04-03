@@ -13,7 +13,6 @@ DEFAULT_DELAY = 0.05
 
 # installer
 MNT_PREBUILT_URL = r"https://github.com/williamfzc/stf-binaries/raw/master/node_modules/minitouch-prebuilt/prebuilt"
-MNT_HOME = "/data/local/tmp/minitouch"
 
 # system
 # 'Linux', 'Windows' or 'Darwin'.

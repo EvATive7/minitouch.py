@@ -1,27 +1,25 @@
 import time
 
-from . import config
+from . import const
 from .logger import logger
 
 
 class CommandBuilder(object):
     """Build command str for minitouch.
 
-    You can use this, to custom actions as you wish::
+    You can use this, to custom actions as you wish:
 
-        with safe_connection(_DEVICE_ID) as connection:
-            builder = CommandBuilder()
-            builder.down(0, 400, 400, 50)
-            builder.commit()
-            builder.move(0, 500, 500, 50)
-            builder.commit()
-            builder.move(0, 800, 400, 50)
-            builder.commit()
-            builder.up(0)
-            builder.commit()
-            builder.publish(connection)
-
-    use `d.connection` to get `connection` from device
+        mnt = MNT(...)
+        builder = CommandBuilder()
+        builder.down(0, 400, 400, 50)
+        builder.commit()
+        builder.move(0, 500, 500, 50)
+        builder.commit()
+        builder.move(0, 800, 400, 50)
+        builder.commit()
+        builder.up(0)
+        builder.commit()
+        builder.publish(mnt)
     """
 
     # TODO (x, y) can not beyond the screen size
@@ -63,14 +61,14 @@ class CommandBuilder(object):
         self.append(command)
         return command
 
-    def publish(self, connection, block=False):
+    def publish(self, mnt, block=False):
         """apply current commands (_content), to your device"""
         self.commit()
         final_content = self._content
         logger.info("send operation: {}".format(final_content.replace("\n", "\\n")))
-        connection.send(final_content)
+        mnt.send(final_content)
         if block:
-            time.sleep(self._delay / 1000 + config.DEFAULT_DELAY)
+            time.sleep(self._delay / 1000 + const.DEFAULT_DELAY)
         self.reset()
         return final_content
 
