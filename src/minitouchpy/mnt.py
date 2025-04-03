@@ -210,7 +210,7 @@ class MNT(object):
     def stop(self):
         self.mnt_process and self.mnt_process.kill()
         self._remove_forward_port()
-        logger.info("device {} unbind to {}".format(self.device_id, self.port))
+        logger.info("stopped")
 
     def send(self, content):
         if self._communicate_type == MNTServerCommunicateType.STDIO:
