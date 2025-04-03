@@ -209,7 +209,8 @@ class MNT(object):
 
     def stop(self):
         self.mnt_process and self.mnt_process.kill()
-        self._remove_forward_port()
+        if self._communicate_type == MNTServerCommunicateType.SOCKET:
+            self._remove_forward_port()
         logger.info("stopped")
 
     def send(self, content):
