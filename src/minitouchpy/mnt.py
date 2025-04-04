@@ -95,7 +95,7 @@ class MNTEvent(Enum):
     PID = "$"
 
     EVATIVE7_LOG = "jlog"
-    EVATIVE7_CTX = "jctx"
+    EVATIVE7_CTX = "ctx"
 
 
 @dataclass
