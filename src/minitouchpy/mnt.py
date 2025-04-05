@@ -187,11 +187,12 @@ class MNT(object):
 
         self._additional_param += ["-n {}".format(self.id_)]
         self._additional_param = list(set(self._additional_param))
+        self._mnt_home = "/data/local/tmp/{}".format("minitouch_" + self.type_)
 
         _check_install_mnt(
             device_id,
             mnt_asset_path,
-            mnthome="/data/local/tmp/{}".format("minitouch_" + self.type_),
+            mnthome=self._mnt_home,
         )
 
         # keep minitouch alive
@@ -323,7 +324,7 @@ class MNT(object):
             "-s",
             self.device_id,
             "shell",
-            "/data/local/tmp/minitouch" + additional_param,
+            self._mnt_home + additional_param,
         ]
         logger.info("start minitouch: {}".format(" ".join(command_list)))
         self.mnt_process = subprocess.Popen(
