@@ -16,12 +16,14 @@ from . import const
 from .logger import logger
 from .utils import is_device_connected, is_port_using, str2byte
 
-_ADB = const.ADB_EXECUTOR
 _read_callback_type: TypeAlias = Callable[[str], None]
 
 
 def _check_install_mnt(
-    deviceid: str, base_path: Path, mnthome="/data/local/tmp/minitouch"
+    deviceid: str,
+    base_path: Path,
+    mnthome="/data/local/tmp/minitouch",
+    adb_executor=const.DEFAULT_ADB_EXECUTOR,
 ):
     """Check if minitouch is installed on the device and install it if missing.
 
@@ -35,11 +37,18 @@ def _check_install_mnt(
         FileNotFoundError: If the minitouch binary cannot be found in the specified base_path/ABI directory.
     """
     file_list = subprocess.check_output(
-        [_ADB, "-s", deviceid, "shell", "ls", str(PurePosixPath(mnthome).parent)]
+        [
+            adb_executor,
+            "-s",
+            deviceid,
+            "shell",
+            "ls",
+            str(PurePosixPath(mnthome).parent),
+        ]
     )
     if not PurePosixPath(mnthome).name in file_list.decode(const.DEFAULT_CHARSET):
         abi = subprocess.getoutput(
-            "{} -s {} shell getprop ro.product.cpu.abi".format(_ADB, deviceid)
+            "{} -s {} shell getprop ro.product.cpu.abi".format(adb_executor, deviceid)
         )
         logger.info("device {} is {}".format(deviceid, abi))
 
@@ -48,8 +57,10 @@ def _check_install_mnt(
             raise FileNotFoundError("minitouch not found in {}".format(mnt_path))
 
         # push and grant
-        subprocess.check_call([_ADB, "-s", deviceid, "push", mnt_path, mnthome])
-        subprocess.check_call([_ADB, "-s", deviceid, "shell", "chmod", "777", mnthome])
+        subprocess.check_call([adb_executor, "-s", deviceid, "push", mnt_path, mnthome])
+        subprocess.check_call(
+            [adb_executor, "-s", deviceid, "shell", "chmod", "777", mnthome]
+        )
         logger.debug("minitouch installed in {}".format(mnthome))
     else:
         logger.debug("minitouch already installed in {}".format(deviceid))
@@ -157,9 +168,10 @@ class MNT(object):
         additional_param=[],
         callback: Callable[[MNTEvent, MNTEventData], None] = None,
         mnt_asset_path: str = Path("."),
+        adb_executor=const.DEFAULT_ADB_EXECUTOR,
         **kwargs,
     ):
-        assert is_device_connected(device_id)
+        assert is_device_connected(device_id, adb_executor)
 
         self.device_id = device_id
         self.max_contacts = None
@@ -168,6 +180,7 @@ class MNT(object):
         self.max_pressure = None
         self.pid = None
         self._connected = False
+        self.adb_executor = adb_executor
 
         self.type_ = type_
         self._additional_param = additional_param
@@ -193,6 +206,7 @@ class MNT(object):
             device_id,
             mnt_asset_path,
             mnthome=self._mnt_home,
+            adb_executor=self.adb_executor,
         )
 
         # keep minitouch alive
@@ -240,7 +254,7 @@ class MNT(object):
     def _forward_port(self):
         """allow pc access minitouch with port"""
         command_list = [
-            _ADB,
+            self.adb_executor,
             "-s",
             self.device_id,
             "forward",
@@ -254,7 +268,7 @@ class MNT(object):
     def _remove_forward_port(self):
         """allow pc access minitouch with port"""
         command_list = [
-            _ADB,
+            self.adb_executor,
             "-s",
             self.device_id,
             "forward",
@@ -320,7 +334,7 @@ class MNT(object):
         else:
             additional_param = ""
         command_list = [
-            _ADB,
+            self.adb_executor,
             "-s",
             self.device_id,
             "shell",

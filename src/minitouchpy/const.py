@@ -18,4 +18,4 @@ MNT_PREBUILT_URL = r"https://github.com/williamfzc/stf-binaries/raw/master/node_
 # 'Linux', 'Windows' or 'Darwin'.
 SYSTEM_NAME = platform.system()
 NEED_SHELL = SYSTEM_NAME != "Windows"
-ADB_EXECUTOR = "adb"
+DEFAULT_ADB_EXECUTOR = "adb"
