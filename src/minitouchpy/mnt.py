@@ -47,9 +47,17 @@ def _check_install_mnt(
         ]
     )
     if not PurePosixPath(mnthome).name in file_list.decode(const.DEFAULT_CHARSET):
-        abi = subprocess.getoutput(
-            "{} -s {} shell getprop ro.product.cpu.abi".format(adb_executor, deviceid)
-        )
+        abi = subprocess.check_output(
+            [
+                adb_executor,
+                "-s",
+                deviceid,
+                "shell",
+                "getprop",
+                "ro.product.cpu.abi",
+            ],
+            text=True,
+        ).strip()
         logger.info("device {} is {}".format(deviceid, abi))
 
         mnt_path = base_path / abi / "minitouch"
